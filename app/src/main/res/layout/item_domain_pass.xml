@@ -13,36 +13,67 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:text="Name"
             android:id="@+id/tvName"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:text="Title"
             android:id="@+id/tvTitle"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:text="Domain"
             android:id="@+id/tvDomain"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:textSize="25sp"
             tools:text="BreachData"
             android:id="@+id/tvBreachDate"/>
 
         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        tools:text="PwnCount"
+        android:id="@+id/tvPwnCount"/>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            tools:text="PwnCount"
-            android:id="@+id/tvPwnCount"/>
+            android:textSize="20sp"
+            tools:text="Description"
+            android:id="@+id/tvDescription"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            tools:text="Verified"
+            android:id="@+id/tvVerified"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            tools:text="Fabricated"
+            android:id="@+id/tvFabricated"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            tools:text="Sensitive"
+            android:id="@+id/tvSensitive"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            tools:text="Retired"
+            android:id="@+id/tvRetired"/>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
