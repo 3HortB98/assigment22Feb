@@ -27,7 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener ,HomeContract.View{
     EditText etInput;
     Button btnSearch;
     DomainAdapter domainAdapter = new DomainAdapter();
@@ -60,37 +60,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void handleSearchClick(){
-        String etDomain = etInput.getText().toString();
+        HomePresenter homePresenter = new HomePresenter(this);
+        homePresenter.getDomainPass(etInput.getText().toString());
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build();
+    }
 
-        Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create());
+    @Override
+    public void showData(List<DomainRepo> result) {
+        domainAdapter.setData(result);
+    }
 
-        Retrofit retrofit = retrofitBuilder.build();
+    @Override
+    public void showError(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    }
 
-        PwnedService pwnedService = retrofit.create(PwnedService.class);
+    @Override
+    public void showProgress() {
 
-        pwnedService.getDomain(etDomain).enqueue(new Callback<List<DomainRepo>>() {
-            @Override
-            public void onResponse(Call<List<DomainRepo>> call, Response<List<DomainRepo>> response) {
-                if(response.isSuccessful()){
-                    domainAdapter.setData(response.body());
-                }else{
-                    Toast.makeText(MainActivity.this,"No results found", Toast.LENGTH_SHORT).show();
-                }
-            }
+    }
 
-            @Override
-            public void onFailure(Call<List<DomainRepo>> call, Throwable t) {
-                Toast.makeText(MainActivity.this,"Network failure", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    public void hideProgress() {
 
     }
 }
