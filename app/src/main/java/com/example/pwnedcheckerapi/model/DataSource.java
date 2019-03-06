@@ -4,17 +4,12 @@ package com.example.pwnedcheckerapi.model;
 import com.example.pwnedcheckerapi.DomainRepo;
 
 import java.util.List;
+import java.util.Observer;
 
 public interface DataSource {
-
-
-
             void getDomainData(String Domain);
+            void setObserver(Observer observer);
 
 
-        interface DataObserver{
-            void onSuccess(List<DomainRepo> result);
-            void onFailure(String error);
-        }
     }
 

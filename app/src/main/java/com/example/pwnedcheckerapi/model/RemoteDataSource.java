@@ -7,7 +7,10 @@ import com.example.pwnedcheckerapi.DomainRepo;
 import com.example.pwnedcheckerapi.PwnedService;
 import com.example.pwnedcheckerapi.home.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -18,15 +21,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RemoteDataSource implements DataSource {
-    private DataObserver listener;
-    public RemoteDataSource(DataObserver listener){
-        this.listener = listener;
-    }
+public class RemoteDataSource extends Observable implements DataSource {
 
-    @Override
-    public void getDomainData(String Domain) {
-
+    private final PwnedService pwnedService;
+    public RemoteDataSource(){
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -39,19 +37,34 @@ public class RemoteDataSource implements DataSource {
 
         Retrofit retrofit = retrofitBuilder.build();
 
-        PwnedService pwnedService = retrofit.create(PwnedService.class);
+        pwnedService = retrofit.create(PwnedService.class);
 
+    }
+
+    @Override
+    public void getDomainData(String Domain) {
+        final List<DomainRepo> domains = new ArrayList<>();
         pwnedService.getDomain(Domain).enqueue(new Callback<List<DomainRepo>>() {
             @Override
             public void onResponse(Call<List<DomainRepo>> call, Response<List<DomainRepo>> response) {
+                if(response.isSuccessful() && response.body()!= null){
+                    domains.clear();
+                    domains.addAll(response.body());
+                    setChanged();
+                    notifyObservers(domains);
 
-                listener.onSuccess(response.body());
+                }
             }
 
             @Override
             public void onFailure(Call<List<DomainRepo>> call, Throwable t) {
-                listener.onFailure("Network failure");
+                t.fillInStackTrace();
             }
         });
+    }
+
+    @Override
+    public void setObserver(Observer observer) {
+        addObserver(observer);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.pwnedcheckerapi;
+package com.example.pwnedcheckerapi.home;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,17 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.pwnedcheckerapi.DomainRepo;
+import com.example.pwnedcheckerapi.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class DomainAdapter extends RecyclerView.Adapter<DomainAdapter.itemViewHolder>{
 
 
-    private final List<DomainRepo> data;
+    private final List<DomainRepo> data = new ArrayList<>();
 
-    public DomainAdapter(){
-        this.data = new ArrayList<>();
-    }
+
     public void setData(List<DomainRepo> newData) {
         data.clear();
         data.addAll(newData);
@@ -77,5 +78,7 @@ public class DomainAdapter extends RecyclerView.Adapter<DomainAdapter.itemViewHo
             tvSensitive = itemView.findViewById(R.id.tvSensitive);
             tvRetired = itemView.findViewById(R.id.tvRetired);
         }
+
+
     }
 }

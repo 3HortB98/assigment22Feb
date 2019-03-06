@@ -1,5 +1,7 @@
 package com.example.pwnedcheckerapi.home;
 
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,24 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.pwnedcheckerapi.Constants;
-import com.example.pwnedcheckerapi.DomainAdapter;
 import com.example.pwnedcheckerapi.DomainRepo;
-import com.example.pwnedcheckerapi.PwnedService;
 import com.example.pwnedcheckerapi.R;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener ,HomeContract.View{
+public class MainActivity extends AppCompatActivity {
     EditText etInput;
     Button btnSearch;
     DomainAdapter domainAdapter = new DomainAdapter();
@@ -45,43 +35,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.addItemDecoration(divider);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setAdapter(domainAdapter);
-        btnSearch.setOnClickListener(this);
 
-    }
+        final HomeViewModel homeViewModel = new HomeViewModel();
+        homeViewModel.getDomainLiveData().observe(this, new Observer<List<DomainRepo>>() {
+            @Override
+            public void onChanged(@Nullable List<DomainRepo> domainRepos) {
+                domainAdapter.setData(domainRepos);
+            }
+        });
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnSearch:
-                handleSearchClick();
-                break;
-
-        }
-    }
-
-    public void handleSearchClick(){
-        HomePresenter homePresenter = new HomePresenter(this);
-        homePresenter.getDomainPass(etInput.getText().toString());
-
-    }
-
-    @Override
-    public void showData(List<DomainRepo> result) {
-        domainAdapter.setData(result);
-    }
-
-    @Override
-    public void showError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                homeViewModel.getDomain(etInput.getText().toString());
+            }
+        });
 
     }
 }
